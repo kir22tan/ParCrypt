@@ -5,8 +5,6 @@ A modular, multithreaded C++ file encryption and decryption utility using XOR ci
 - Encrypts and decrypts any file using XOR.
 - Multithreaded for faster performance.
 - Key is loaded securely from a `.env` file.
-- Clean HotMan-style modular folder structure.
-- Cross-platform compatibility via MinGW / g++.
 - Includes a `Makefile` for easy build and cleanup.
 
 ## 🗂️ Project Structure
