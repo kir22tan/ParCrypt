@@ -4,8 +4,5 @@
 
 using namespace std;
 
-void xorEncrypt(vector<char>& data, const string& password);
-
-vector<char> prepareEncryptedBuffer(const vector<char>& rawData, const string& password);
-
-bool validatePasswordAndDecrypt(vector<char>& encryptedBuffer, const string& inputPassword);
+vector<char> attachHeader(const vector<char>& data, const string& password);
+bool validatePasswordAndDecrypt(vector<char>& data, const string& password);

@@ -1,25 +1,26 @@
 #include "../include/thread_manager.h"
-#include "../include/encryptor.h"
+#include <thread>
+#include <algorithm>
 
-void parallelEncrypt(vector<char>& buffer, int threadCount, const string& password) {
+void parallelEncrypt(vector<char>& data, int threadCount, const string& password) {
     vector<thread> threads;
-    int n = buffer.size();
+    int n = data.size();
     int chunkSize = (n + threadCount - 1) / threadCount;
 
-    auto encryptChunk = [&](int start) {
-        int end = min(start + chunkSize, n);
-        for (int i = start; i < end; i++) {
-            buffer[i] ^= password[i % password.size()];
+    auto encryptPart = [&](int startIndex) {
+        int endIndex = min(startIndex + chunkSize, n);
+        for (int i = startIndex; i < endIndex; i++) {
+            data[i] ^= password[i % password.length()];
         }
     };
 
-    for (int i = 0; i < (int)threadCount; i++) {
-        int startIndex = i * chunkSize;
-        if (startIndex >= n) break;
-        threads.push_back(thread(encryptChunk, startIndex));
+    for (int i = 0; i < threadCount; i++) {
+        int start = i * chunkSize;
+        if (start >= n) break;
+        threads.push_back(thread(encryptPart, start));
     }
 
-    for (int i = 0; i < (int)threads.size(); i++) {
+    for (int i = 0; i < threads.size(); i++) {
         threads[i].join();
     }
 }

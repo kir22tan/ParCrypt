@@ -1,39 +1,27 @@
 #include "../include/encryptor.h"
 
-void xorEncrypt(vector<char>& data, const string& key) {
-    if (key.empty()) return;
-    int n = key.length();
-    for (int i = 0; i < (int)data.size(); i++) {
-        data[i] ^= key[i % n];
-    }
+vector<char> attachHeader(const vector<char>& data, const string& password) {
+    vector<char> result;
+    result.push_back((char)password.length());
+    for (char ch : password) result.push_back(ch);
+    result.insert(result.end(), data.begin(), data.end());
+    return result;
 }
 
-vector<char> prepareEncryptedBuffer(const vector<char>& raw, const string& key) {
-    vector<char> data = raw;
-    xorEncrypt(data, key);
+bool validatePasswordAndDecrypt(vector<char>& data, const string& password) {
+    if (data.empty()) return false;
 
-    vector<char> res;
-    res.push_back((char)key.length());
+    int len = (int)data[0];
+    if ((int)data.size() < 1 + len) return false;
 
-    for (int i = 0; i < (int)key.length(); i++) {
-        res.push_back(key[i]);
+    string stored(data.begin() + 1, data.begin() + 1 + len);
+    if (stored != password) return false;
+
+    vector<char> decrypted(data.begin() + 1 + len, data.end());
+    for (int i = 0; i < decrypted.size(); i++) {
+        decrypted[i] ^= password[i % password.length()];
     }
 
-    res.insert(res.end(), data.begin(), data.end());
-    return res;
-}
-
-bool validatePasswordAndDecrypt(vector<char>& buf, const string& key) {
-    if (buf.empty()) return false;
-
-    int len = (int)buf[0];
-    if ((int)buf.size() < 1 + len) return false;
-
-    string pass(buf.begin() + 1, buf.begin() + 1 + len);
-    if (pass != key) return false;
-
-    vector<char> data(buf.begin() + 1 + len, buf.end());
-    xorEncrypt(data, key);
-    buf = data;
+    data = decrypted;
     return true;
 }

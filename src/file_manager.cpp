@@ -4,29 +4,21 @@
 
 vector<char> readFile(const string& path) {
     ifstream fin(path, ios::binary);
-    if (!fin) {
-        throw runtime_error("Failed to open input file: " + path);
-    }
+    if (!fin) throw runtime_error("Can't open: " + path);
 
-    vector<char> buffer;
+    vector<char> data;
     char ch;
-    while (fin.get(ch)) {
-        buffer.push_back(ch);
-    }
+    while (fin.get(ch)) data.push_back(ch);
 
     fin.close();
-    return buffer;
+    return data;
 }
 
-void writeFile(const string& path, const vector<char>& data) {
-    ofstream fout(path, ios::binary);
-    if (!fout) {
-        throw runtime_error("Failed to open output file: " + path);
-    }
 
-    for (int i = 0; i < (int)data.size(); i++) {
-        fout.put(data[i]);
-    }
+void writeFile(const string& filePath, const vector<char>& data) {
+    ofstream fout(filePath, ios::binary);
+    if (!fout.is_open()) throw runtime_error("Could not write to: " + filePath);
 
+    for (int i = 0; i < data.size(); i++) fout.put(data[i]);
     fout.close();
 }

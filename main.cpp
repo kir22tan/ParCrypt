@@ -1,6 +1,6 @@
+#include "include/thread_manager.h"
 #include "include/encryptor.h"
 #include "include/file_manager.h"
-
 #include <iostream>
 
 using namespace std;
@@ -18,27 +18,26 @@ int main() {
     string inPath, outName, password;
 
     if (choice == 1) {
-        // ENCRYPT
         cout << "Enter path of file to encrypt: ";
         getline(cin, inPath);
 
         cout << "Enter password: ";
         getline(cin, password);
 
-        cout << "Enter name for encrypted file (e.g., locked.bin): ";
+        cout << "Enter name for encrypted file (e.g., secret.bin): ";
         getline(cin, outName);
 
         try {
-            vector<char> buffer = readFile(inPath);
-            vector<char> encrypted = prepareEncryptedBuffer(buffer, password);
+            vector<char> data = readFile(inPath);
+            parallelEncrypt(data, 4, password);
+            vector<char> encrypted = attachHeader(data, password);
             writeFile("encrypt/" + outName, encrypted);
-            cout << "\n✅ File encrypted and saved to encrypt/" << outName << "\n";
+            cout << "\n File encrypted and saved to encrypt/" << outName << "\n";
         } catch (exception& e) {
-            cout << "Error: " << e.what() << "\n";
+            cout << " Error: " << e.what() << "\n";
         }
     }
     else if (choice == 2) {
-        // DECRYPT
         cout << "Enter name of encrypted file (inside encrypt/): ";
         getline(cin, outName);
 
@@ -50,21 +49,21 @@ int main() {
         getline(cin, finalName);
 
         try {
-            vector<char> buffer = readFile("encrypt/" + outName);
+            vector<char> data = readFile("encrypt/" + outName);
 
-            if (!validatePasswordAndDecrypt(buffer, password)) {
-                cout << "\n❌ Incorrect password. Aborting.\n";
+            if (!validatePasswordAndDecrypt(data, password)) {
+                cout << "\n Incorrect password. Aborting.\n";
                 return 1;
             }
 
-            writeFile("decrypt/" + finalName, buffer);
-            cout << "\n✅ File decrypted and saved to decrypt/" << finalName << "\n";
+            writeFile("decrypt/" + finalName, data);
+            cout << "\n File decrypted and saved to decrypt/" << finalName << "\n";
         } catch (exception& e) {
-            cout << "Error: " << e.what() << "\n";
+            cout << " Error: " << e.what() << "\n";
         }
     }
     else {
-        cout << "❌ Invalid option.\n";
+        cout << " Invalid option.\n";
     }
 
     return 0;
