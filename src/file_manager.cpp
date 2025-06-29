@@ -1,36 +1,32 @@
 #include "../include/file_manager.h"
-#include <iostream>
 #include <fstream>
 #include <stdexcept>
 
-using namespace std;
-
 vector<char> readFile(const string& path) {
-    ifstream fin;
-    fin.open(path, ios::binary);  // ✔ safer and more compatible
-
-    if (!fin.is_open()) {
+    ifstream fin(path, ios::binary);
+    if (!fin) {
         throw runtime_error("Failed to open input file: " + path);
     }
 
-    fin.seekg(0, ios::end);
-    size_t size = fin.tellg();
-    fin.seekg(0);
+    vector<char> buffer;
+    char ch;
+    while (fin.get(ch)) {
+        buffer.push_back(ch);
+    }
 
-    vector<char> buffer(size);
-    fin.read(buffer.data(), size);
     fin.close();
     return buffer;
 }
 
 void writeFile(const string& path, const vector<char>& data) {
-    ofstream fout;
-    fout.open(path, ios::binary);  // ✔ same pattern for writing
-
-    if (!fout.is_open()) {
+    ofstream fout(path, ios::binary);
+    if (!fout) {
         throw runtime_error("Failed to open output file: " + path);
     }
 
-    fout.write(data.data(), data.size());
+    for (int i = 0; i < (int)data.size(); i++) {
+        fout.put(data[i]);
+    }
+
     fout.close();
 }

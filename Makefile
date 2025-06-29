@@ -10,32 +10,31 @@ OBJ_DIR = obj
 OBJS = $(OBJ_DIR)/file_manager.o \
        $(OBJ_DIR)/thread_manager.o \
        $(OBJ_DIR)/encryptor.o \
-       $(OBJ_DIR)/env_loader.o \
        $(OBJ_DIR)/main.o
 
-# Executable
-TARGET = ParCrypt
+# Executable name
+TARGET = ParCrypt.exe
 
-# Default rule
+# Default target
 all: create_obj_dir $(TARGET)
 
-# Create the objects directory if it doesn't exist
+# Create obj dir if not exists (Windows syntax)
 create_obj_dir:
 	@if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 
-# Link object files into final executable
+# Link all object files
 $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET)
 
-# Compile main.cpp separately
+# Compile main.cpp
 $(OBJ_DIR)/main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Compile all src/ cpp files into objects/
+# Compile src/*.cpp files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean build artifacts
+# Clean everything
 clean:
 	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
-	@if exist $(TARGET).exe del $(TARGET).exe
+	@if exist $(TARGET) del $(TARGET)

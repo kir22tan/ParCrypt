@@ -1,37 +1,70 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include "include/encryptor.h"
 #include "include/file_manager.h"
-#include "include/thread_manager.h"
-#include "include/env_loader.h"
-#include "include/constants.h"
+
+#include <iostream>
 
 using namespace std;
 
 int main() {
-    try {
-        char key = loadKeyFromEnv();
+    cout << "=== ParCrypt ===\n\n";
+    cout << "1. Encrypt a file\n";
+    cout << "2. Decrypt a file\n";
+    cout << "Enter choice: ";
 
-        cout << "Enter file path to encrypt/decrypt: ";
-        string input;
-        cin >> input;
+    int choice;
+    cin >> choice;
+    cin.ignore();
 
-        cout << "Encrypt (E) or Decrypt (D)? ";
-        char mode;
-        cin >> mode;
+    string inPath, outName, password;
 
-        vector<char> buffer = readFile(input);
+    if (choice == 1) {
+        // ENCRYPT
+        cout << "Enter path of file to encrypt: ";
+        getline(cin, inPath);
 
-        // Encrypt/Decrypt (XOR is symmetric)
-        parallelEncrypt(buffer, THREAD_COUNT, key);
+        cout << "Enter password: ";
+        getline(cin, password);
 
-        string outFile = (mode == 'E' || mode == 'e') ? "encrypted.dat" : "decrypted.txt";
-        writeFile(outFile, buffer);
+        cout << "Enter name for encrypted file (e.g., locked.bin): ";
+        getline(cin, outName);
 
-        cout << "Done. Output saved as: " << outFile << endl;
-    } catch (exception& e) {
-        cerr << "Error: " << e.what() << endl;
-        return 1;
+        try {
+            vector<char> buffer = readFile(inPath);
+            vector<char> encrypted = prepareEncryptedBuffer(buffer, password);
+            writeFile("encrypt/" + outName, encrypted);
+            cout << "\n✅ File encrypted and saved to encrypt/" << outName << "\n";
+        } catch (exception& e) {
+            cout << "Error: " << e.what() << "\n";
+        }
+    }
+    else if (choice == 2) {
+        // DECRYPT
+        cout << "Enter name of encrypted file (inside encrypt/): ";
+        getline(cin, outName);
+
+        cout << "Enter password: ";
+        getline(cin, password);
+
+        cout << "Enter name for decrypted file (e.g., final.txt): ";
+        string finalName;
+        getline(cin, finalName);
+
+        try {
+            vector<char> buffer = readFile("encrypt/" + outName);
+
+            if (!validatePasswordAndDecrypt(buffer, password)) {
+                cout << "\n❌ Incorrect password. Aborting.\n";
+                return 1;
+            }
+
+            writeFile("decrypt/" + finalName, buffer);
+            cout << "\n✅ File decrypted and saved to decrypt/" << finalName << "\n";
+        } catch (exception& e) {
+            cout << "Error: " << e.what() << "\n";
+        }
+    }
+    else {
+        cout << "❌ Invalid option.\n";
     }
 
     return 0;

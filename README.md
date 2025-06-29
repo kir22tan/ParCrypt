@@ -1,72 +1,57 @@
-# ParCrypt 🔐
-A modular, multithreaded C++ file encryption and decryption utility using XOR cipher.
+ParCrypt 🔐
+A modular, multithreaded C++ file encryption and decryption utility using XOR cipher and user-defined passwords.
 
-## 📦 Features
-- Encrypts and decrypts any file using XOR.
-- Multithreaded for faster performance.
-- Key is loaded securely from a `.env` file.
-- Includes a `Makefile` for easy build and cleanup.
+📦 Features
+- Encrypt and decrypt any type of file (text, image, PDF, etc.)
+- Multithreaded for faster XOR encryption
+- User provides password at runtime
+- Password is securely embedded in encrypted file
+- Separate encrypt/ and decrypt/ folders for output files
+- Simple Makefile for building and cleaning
 
-## 🗂️ Project Structure
-
-```
+🗂️ Project Structure
 ParCrypt/
 ├── include/
-│   ├── constants.h
 │   ├── encryptor.h
-│   ├── env_loader.h
 │   ├── file_manager.h
 │   └── thread_manager.h
 ├── src/
 │   ├── encryptor.cpp
-│   ├── env_loader.cpp
 │   ├── file_manager.cpp
 │   └── thread_manager.cpp
-├── obj/                  # (Created by make)
-├── .env
-├── .gitignore
-├── main.cpp
-├── Makefile
-└── README.md
-```
+├── obj/                # Auto-created on build
+├── encrypt/            # Stores encrypted files
+├── decrypt/            # Stores decrypted files
+├── main.cpp            # Entry point
+├── Makefile            # Build system
+└── README.md           
 
-## 🔧 Build Instructions
+🔧 Build Instructions
+Requirements:
+- C++23 compatible compiler (GCC 13+ or MinGW 15+)
+- make or mingw32-make
 
-### 🛠️ Requirements
-- C++23 compatible compiler (e.g. GCC 13+, MinGW 15.1.0)
-- `mingw32-make` or `make`
+To compile:
+> make          (or mingw32-make on Windows)
 
-### 🧪 Compile
-From inside the `ParCrypt` directory:
+To clean:
+> make clean
 
-```bash
-mingw32-make
-```
+🧾 Usage
+Run the program:
 
-### 🔁 Clean Build Files
+> ./ParCrypt
 
-```bash
-mingw32-make clean
-```
+Encryption:
+- Enter path of file to encrypt
+- Enter password
+- Enter name for encrypted file (e.g. secret.bin)
+→ Saved to encrypt/ folder
 
-## 🧾 Usage
+Decryption:
+- Enter name of encrypted file (from encrypt/)
+- Enter password used during encryption
+- Enter name for decrypted file (e.g. final.txt)
+→ Saved to decrypt/ folder
 
-### 1. Prepare `.env` file:
-```
-XOR_KEY=0x5A
-```
-
-> The XOR key must be a valid integer. Can be in hex (`0x5A`) or decimal (`90`) format.
-
-### 2. Run Program
-```bash
-./ParCrypt
-```
-
-You’ll be prompted to:
-- Enter a file path to encrypt/decrypt.
-- Choose mode: `E` for encryption, `D` for decryption.
-
-### 3. Output
-- If encrypted: `encrypted.dat`
-- If decrypted: `decrypted.txt`
+📌 Note from Siddharth : This project demonstrates file encryption with XOR for educational purposes. For sensitive data, use industry-grade encryption libraries.
