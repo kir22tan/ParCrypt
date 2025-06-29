@@ -1,15 +1,31 @@
-ParCrypt 🔐
-A modular, multithreaded C++ file encryption and decryption utility using XOR cipher and user-defined passwords.
+# ParCrypt 🔐
 
-📦 Features
-- Encrypt and decrypt any type of file (text, image, PDF, etc.)
-- Multithreaded for faster XOR encryption
-- User provides password at runtime
-- Password is securely embedded in encrypted file
-- Separate encrypt/ and decrypt/ folders for output files
-- Simple Makefile for building and cleaning
+**ParCrypt** is a multithreaded C++ file encryption and decryption tool using XOR cipher and user-defined passwords.
 
-🗂️ Project Structure
+It demonstrates concepts like:
+- File I/O
+- Basic encryption (XOR)
+- Threading
+- Modular project design
+- Custom build via Makefile
+
+---
+
+## 📦 Features
+
+- 🔐 Supports **any file type** (text, images, PDFs, etc.)
+- 🔑 Password provided by user during runtime
+- 🧵 Uses **multiple threads** to speed up encryption
+- 📁 Stores:
+  - Encrypted files in `encrypt/`
+  - Decrypted files in `decrypt/`
+- 🛠️ Includes a `Makefile` for easy build & cleanup
+
+---
+
+## 🗂️ Project Structure
+
+```
 ParCrypt/
 ├── include/
 │   ├── encryptor.h
@@ -19,39 +35,63 @@ ParCrypt/
 │   ├── encryptor.cpp
 │   ├── file_manager.cpp
 │   └── thread_manager.cpp
-├── obj/                # Auto-created on build
-├── encrypt/            # Stores encrypted files
-├── decrypt/            # Stores decrypted files
+├── obj/                # Auto-created when building
+├── encrypt/            # Output folder for encrypted files
+├── decrypt/            # Output folder for decrypted files
 ├── main.cpp            # Entry point
 ├── Makefile            # Build system
-└── README.md           
+└── README.md
+```
 
-🔧 Build Instructions
-Requirements:
-- C++23 compatible compiler (GCC 13+ or MinGW 15+)
-- make or mingw32-make
+---
 
-To compile:
-> make          (or mingw32-make on Windows)
+## 🔧 Build Instructions
 
-To clean:
-> make clean
+### ✅ Requirements
 
-🧾 Usage
-Run the program:
+- C++ compiler with **C++23 support** (e.g. GCC 13+, MinGW 15+)
+- `make` or `mingw32-make` (Windows)
 
-> ./ParCrypt
+### ⚙️ Build
 
-Encryption:
-- Enter path of file to encrypt
-- Enter password
-- Enter name for encrypted file (e.g. secret.bin)
-→ Saved to encrypt/ folder
+```bash
+make          # or mingw32-make on Windows
+```
 
-Decryption:
-- Enter name of encrypted file (from encrypt/)
-- Enter password used during encryption
-- Enter name for decrypted file (e.g. final.txt)
-→ Saved to decrypt/ folder
+This will:
+- Create the `obj/` directory (if not present)
+- Compile all `.cpp` files from `src/`
+- Output the executable `ParCrypt.exe` (Windows) or `ParCrypt` (Linux/macOS)
 
-📌 Note from Siddharth : This project demonstrates file encryption with XOR for educational purposes. For sensitive data, use industry-grade encryption libraries.
+### 🧹 Clean Build Files
+
+```bash
+make clean
+```
+
+This will:
+- Delete the `obj/` directory
+- Delete the executable (`ParCrypt.exe` or `ParCrypt`)
+
+---
+
+## 🧾 How to Use
+
+```bash
+./ParCrypt
+```
+
+You’ll be prompted for:
+
+### 🔐 Encryption
+1. File path to encrypt
+2. Password
+3. Output name (stored in `encrypt/`)
+
+### 🔓 Decryption
+1. Name of encrypted file (from `encrypt/`)
+2. Password used during encryption
+3. Output name (saved in `decrypt/`)
+
+---
+
